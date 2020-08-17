@@ -247,74 +247,57 @@
 
         //获取地域分布数据
         const mapChart = echarts.init(document.getElementById("mapChart"), "shine");
-        const mapChartOpt = {
-            tooltip: {
-                formatter: function (params) {
-                    const data = params.data;
-                    return data.name + "<br />上市公司数：" + data.value;
-                }
-            },
-            visualMap: {
-                type: "piecewise",
-                splitNumber: 6,
-                itemWidth: 10,
-                itemHeight: 10,
-                itemGap: 5,
-                textGap: 5,
-                textStyle: {
-                    fontSize: 10,
-                    color: "#b0c2f9"
-                },
-                min: 0,
-                max: 600,
-                calculable: true,
-                seriesIndex: [0]
-            },
-            geo: {
-                map: "china",
-                roam: true, //开启鼠标缩放和漫游
-                zoom: 1, //地图缩放级别
-                selectedMode: "single",
-                top: 10,
-                bottom: 10,
-                layoutCenter: ["50%", "50%"],
-                //layoutSize: "100%", //保持地图宽高比
-                label: {
-                    show: true,
-                    fontSize: 10,
-                    color: "#ceac09"
-                }
-            },
-            series: [{
-                name: "地域分布",
-                type: "map",
-                geoIndex: 0
-            }]
-        };
-        mapChart.setOption(mapChartOpt);
-        $.ajax({
-            url: "data/region-count.json",
-            dataType: "json"
-        }).done(function () {
-            $("#mapChart").addClass("chart-done");
-        }).done(function (data) {
-            //console.log('Data: ', data);
-            const chartData = [];
-            for (let i in data) {
-                chartData.push({
-                    name: data[i].region,
-                    value: data[i].count
-                });
-            }
-            mapChart.setOption({
-                series: [{
-                    name: "地域分布",
-                    data: chartData
-                }]
-            });
-        }).fail(function (jqXHR) {
-            console.log("Ajax Fail: ", jqXHR.status, jqXHR.statusText);
-        });
+				const mapChartOpt = {
+					tooltip: {
+						trigger: "item",
+						formatter: "{b0}<br />电影数：{c0}<br />占比：{d0}%"
+					},
+					legend: {
+						type: "scroll",
+						orient: "vertical",
+						padding: 0,
+						top: 15,
+						right: 0,
+						itemGap: 5,
+						itemWidth: 10,
+						itemHeight: 10,
+						textStyle: {
+							fontSize: 10,
+							color: "#b0c2f9"
+						}
+					},
+					series: [{
+						name: "CSRC行业分类",
+						type: "pie",
+						center: ["47%", "55%"],
+						radius: ["30%", "85%"]
+					}]
+				};
+				mapChart.setOption(mapChartOpt);
+				$.ajax({
+					url: "data/region-count.json",
+					dataType: "json"
+				}).done(function() {
+					$("#mapChart").addClass("chart-done");
+				}).done(function(data) {
+					//console.log('Data: ', data);
+					const chartData = [];
+					for(let i in data) {
+						chartData.push({
+							name: data[i].alias,
+							value: data[i].stock
+						});
+					}
+					mapChart.setOption({
+						series: [{
+							name: "CSRC行业分类",
+							data: chartData
+						}]
+					});
+				}).fail(function(jqXHR) {
+					console.log("Ajax Fail: ", jqXHR.status, jqXHR.statusText);
+				});
+
 
         //获取月度股票情况数据
         const trendChart = echarts.init(document.getElementById("trendChart"), "shine");
@@ -349,7 +332,7 @@
                 },
                 axisTick: {show: false},
                 axisLabel: {
-                    fontSize: 12,
+                    fontSize: 8.78,
                     color: "#b0c2f9"
                 }
             },
@@ -482,13 +465,14 @@
         }).done(function () {
             $("#trendChart").addClass("chart-done");
         }).done(function (data) {
-            //console.log('Data: ', data);
+            console.log('Data: ', data);
             const xData = [];
             const yData1 = [];
             const yData2 = [];
             const yData3 = [];
             for (let i in data) {
                 xData.push(data[i].month);
+                //console.log(data[i].month);
                 yData1.push(data[i].sh_market_capitalization);
                 yData2.push(data[i].sh_transaction_amount);
                 yData3.push(data[i].sh_pe_ratio);
