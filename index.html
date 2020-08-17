@@ -220,7 +220,7 @@
         };
         rankChart.setOption(rankChartOpt);
         $.ajax({
-            url: apiUrl + "/getTop10/",
+            url: apiUrl + "/getTop10",
             dataType: "json"
         }).done(function () {
             $("#rankChart").addClass("chart-done");
