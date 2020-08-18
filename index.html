@@ -275,7 +275,7 @@
 				};
 				mapChart.setOption(mapChartOpt);
 				$.ajax({
-					url: "data/region-count.json",
+					url: apiUrl+"/getCountryCount",
 					dataType: "json"
 				}).done(function() {
 					$("#mapChart").addClass("chart-done");
